@@ -3,13 +3,12 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
-import { Download, ArrowRight, Menu, X } from 'lucide-react';
+import { Download, ArrowRight } from 'lucide-react';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'home' | 'how-it-works'>('home');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   // Direct Google Drive Download Link (Bypasses Supabase 50MB limit)
@@ -64,7 +63,6 @@ export default function Home() {
 
   const scrollToSection = (id: string, tab: 'home' | 'how-it-works') => {
     setActiveTab(tab);
-    setMobileMenuOpen(false);
     if (id === 'top') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -73,109 +71,75 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f3ef] text-[#1c1c1c] font-sans selection:bg-[#2d5235] selection:text-white">
-      {/* Navigation Bar */}
-      <header className="fixed top-3 sm:top-6 left-0 right-0 z-50 flex justify-center px-4">
-        <nav className="flex items-center justify-between w-full max-w-4xl px-4 sm:px-6 py-2.5 sm:py-3 bg-white/80 backdrop-blur-md rounded-full shadow-sm border border-black/5">
-          <div className="flex items-center gap-2.5 font-semibold text-base sm:text-lg tracking-tight">
-            <div className="relative w-8 h-8 sm:w-9 sm:h-9 overflow-hidden rounded-full flex-shrink-0 border border-black/10">
+    <div className="min-h-screen bg-[#eae6df] text-[#1c1c1c] font-sans selection:bg-[#2d5235] selection:text-white">
+      {/* Navigation Bar - Preserved Full Layout Across Mobile & Desktop */}
+      <header className="fixed top-3 sm:top-6 left-0 right-0 z-50 flex justify-center px-2 sm:px-4">
+        <nav className="flex items-center justify-between w-full max-w-4xl px-3 sm:px-6 py-2 sm:py-3 bg-white/90 backdrop-blur-md rounded-full shadow-md border border-black/10 gap-2">
+         {/* Logo Brand Section */}
+          <div className="flex items-center gap-1.5 sm:gap-2 font-semibold text-[11px] xs:text-xs sm:text-base tracking-tight flex-shrink-0">
+            <div className="relative w-6 h-6 sm:w-9 sm:h-9 overflow-hidden rounded-full flex-shrink-0 border border-black/10">
               <Image
                 src="/logo.png"
                 alt="Qurio Learn Logo"
                 fill
-                sizes="(max-width: 640px) 32px, 36px"
+                sizes="(max-width: 640px) 24px, 36px"
                 className="object-cover"
                 priority
               />
             </div>
-            <span>Qurio Learn</span>
+            <span className="inline lowercase font-medium">Qurio Learn</span>
           </div>
 
-          <div className="hidden md:flex items-center bg-[#eae7e1] p-1 rounded-full text-sm font-medium">
+          {/* Segmented Navigation Tab Pill */}
+          <div className="flex items-center bg-[#dedad3] p-1 rounded-full text-xs sm:text-sm font-medium">
             <button
               onClick={() => scrollToSection('top', 'home')}
-              className={`px-5 py-2 rounded-full transition-all duration-200 ${
-                activeTab === 'home' ? 'bg-[#2d5235] text-white shadow-sm' : 'text-gray-600 hover:text-black'
+              className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-full transition-all duration-200 whitespace-nowrap ${
+                activeTab === 'home' ? 'bg-[#2d5235] text-white shadow-sm' : 'text-gray-700 hover:text-black'
               }`}
             >
               Home
             </button>
             <button
               onClick={() => scrollToSection('how-it-works', 'how-it-works')}
-              className={`px-5 py-2 rounded-full transition-all duration-200 ${
-                activeTab === 'how-it-works' ? 'bg-[#2d5235] text-white shadow-sm' : 'text-gray-600 hover:text-black'
+              className={`px-3 sm:px-5 py-1.5 sm:py-2 rounded-full transition-all duration-200 whitespace-nowrap ${
+                activeTab === 'how-it-works' ? 'bg-[#2d5235] text-white shadow-sm' : 'text-gray-700 hover:text-black'
               }`}
             >
               How it works
             </button>
           </div>
 
+          {/* Download Button */}
           <a
             href={APK_DOWNLOAD_URL}
             target="_blank"
             rel="noopener noreferrer"
             download
-            className="hidden sm:flex items-center gap-2 bg-[#1c1c1c] text-white px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-black transition-all"
+            className="flex items-center gap-1.5 sm:gap-2 bg-[#1c1c1c] text-white px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-black transition-all shadow-sm flex-shrink-0"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>Get APK</span>
           </a>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-black focus:outline-none"
-            aria-label="Toggle Navigation"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </nav>
       </header>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-x-4 top-20 z-40 md:hidden bg-white/95 backdrop-blur-lg rounded-3xl p-6 shadow-xl border border-black/5 flex flex-col gap-4 text-center">
-          <button
-            onClick={() => scrollToSection('top', 'home')}
-            className={`py-3 rounded-2xl text-base font-medium transition-all ${
-              activeTab === 'home' ? 'bg-[#2d5235] text-white' : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            Home
-          </button>
-          <button
-            onClick={() => scrollToSection('how-it-works', 'how-it-works')}
-            className={`py-3 rounded-2xl text-base font-medium transition-all ${
-              activeTab === 'how-it-works' ? 'bg-[#2d5235] text-white' : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            How it works
-          </button>
-          <a
-            href={APK_DOWNLOAD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            download
-            className="flex items-center justify-center gap-2 bg-[#1c1c1c] text-white py-3 rounded-2xl text-base font-medium hover:bg-black transition-all"
-          >
-            <Download className="w-5 h-5" />
-            <span>Get APK Directly</span>
-          </a>
-        </div>
-      )}
 
       {/* Hero Section */}
       <main className="pt-28 sm:pt-36 pb-16 sm:pb-20 px-4 sm:px-6 max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           <div className="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif tracking-tight leading-[1.15] text-balance">
-              Experience the future of Robotics.
+              Experience the future of{' '}
+              <span className="relative inline-block text-[#2d5235] bg-[#2d5235]/10 px-3 py-0.5 rounded-2xl border-b-2 border-[#2d5235]/40 shadow-sm">
+                Robotics.
+              </span>
             </h1>
-            <p className="text-base sm:text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-700 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               Download the APK directly to try our early release, or leave your email to get notified once live on Google Play.
             </p>
 
-            <div className="bg-[#ebe8e1] p-5 sm:p-6 rounded-3xl max-w-md mx-auto lg:mx-0 shadow-inner border border-black/5 text-left">
-              <p className="text-xs sm:text-sm font-medium text-gray-700 mb-3">
+            <div className="bg-white/80 backdrop-blur-sm p-5 sm:p-6 rounded-3xl max-w-md mx-auto lg:mx-0 shadow-md border border-black/10 text-left">
+              <p className="text-xs sm:text-sm font-medium text-gray-800 mb-3">
                 Get priority access the moment we launch on Play Store.
               </p>
               <form onSubmit={handleSubscribe} className="space-y-3">
@@ -185,12 +149,12 @@ export default function Home() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="w-full px-4 py-3 rounded-2xl bg-white border border-transparent focus:border-[#2d5235] outline-none text-sm transition-all"
+                  className="w-full px-4 py-3 rounded-2xl bg-[#f7f5f0] border border-black/10 focus:border-[#2d5235] focus:bg-white outline-none text-sm transition-all"
                 />
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#2d5235] text-white py-3 rounded-2xl text-sm font-medium hover:bg-[#23422a] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full bg-[#2d5235] text-white py-3 rounded-2xl text-sm font-medium hover:bg-[#23422a] transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
                 >
                   {loading ? 'Joining...' : 'Join 100+ early users'}
                   <ArrowRight className="w-4 h-4" />
@@ -210,20 +174,30 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 download
-                className="w-full sm:w-auto flex items-center justify-center gap-3 bg-[#2d5235] text-white px-6 py-3.5 rounded-full font-medium hover:bg-[#23422a] shadow-lg transition-all"
+                className="w-full sm:w-auto flex items-center justify-center gap-3 bg-[#2d5235] text-white px-6 py-3.5 rounded-full font-medium hover:bg-[#23422a] shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5"
               >
                 <Download className="w-5 h-5" />
                 <span>Download APK Directly</span>
               </a>
-              <span className="text-xs text-gray-500 font-medium">v1.0.0 • Android Direct APK</span>
+              <span className="text-xs text-gray-600 font-medium">v1.0.0 • Android Direct APK</span>
             </div>
           </div>
 
+          {/* Clean Phone Mockup with Top Camera Bar */}
           <div className="lg:col-span-5 flex justify-center mt-6 lg:mt-0">
-            <div className="relative w-full max-w-[270px] sm:max-w-[310px] h-[540px] sm:h-[620px] bg-black rounded-[42px] sm:rounded-[50px] p-3 sm:p-3.5 shadow-2xl border-[4px] sm:border-[6px] border-black">
-              <div className="absolute top-5 sm:top-5.5 left-1/2 -translate-x-1/2 w-24 sm:w-28 h-4 sm:h-5 bg-black rounded-full z-30"></div>
+            <div className="relative w-[280px] sm:w-[320px] h-[570px] sm:h-[650px] bg-[#1a1a1b] rounded-[48px] sm:rounded-[54px] p-2.5 sm:p-3 shadow-2xl border-[4px] border-[#2c2c2e]">
+              
+              {/* Integrated Side Volume/Power Buttons */}
+              <div className="absolute -left-[7px] top-24 w-[3px] h-8 bg-[#3a3a3c] rounded-l-sm"></div>
+              <div className="absolute -left-[7px] top-36 w-[3px] h-12 bg-[#3a3a3c] rounded-l-sm"></div>
+              <div className="absolute -right-[7px] top-28 w-[3px] h-14 bg-[#3a3a3c] rounded-r-sm"></div>
 
-              <div className="relative w-full h-full bg-black rounded-[32px] sm:rounded-[40px] overflow-hidden">
+              {/* Inner Display Screen Area */}
+              <div className="relative w-full h-full bg-black rounded-[38px] sm:rounded-[44px] overflow-hidden">
+                
+                {/* Front Camera Pill Bar */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 sm:w-28 h-4 sm:h-5 bg-black rounded-full z-30 shadow-md"></div>
+
                 {screenshots.map((src, index) => (
                   <div
                     key={src}
@@ -235,30 +209,35 @@ export default function Home() {
                       src={src}
                       alt={`App Screenshot ${index + 1}`}
                       fill
-                      sizes="(max-width: 640px) 270px, 310px"
+                      sizes="(max-width: 640px) 280px, 320px"
                       className="object-cover"
                       priority={index === 0}
                     />
                   </div>
                 ))}
 
-                <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-1.5">
+                {/* Subtle Bottom Slide Indicators */}
+                <div className="absolute bottom-5 left-0 right-0 z-20 flex justify-center gap-1.5">
                   {screenshots.map((_, index) => (
                     <span
                       key={index}
                       className={`h-1.5 rounded-full transition-all duration-300 ${
-                        index === currentImageIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/40'
+                        index === currentImageIndex ? 'w-5 bg-white shadow-sm' : 'w-1.5 bg-white/40'
                       }`}
                     />
                   ))}
                 </div>
+
+                {/* Bottom Home Bar */}
+                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-28 h-1 bg-white/60 rounded-full z-20"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <section id="how-it-works" className="mt-20 sm:mt-32 pt-12 sm:pt-16 border-t border-black/10">
-          <div className="text-xs font-semibold tracking-wider text-gray-500 uppercase mb-3 sm:mb-4 text-center sm:text-left">
+        {/* How It Works Section */}
+        <section id="how-it-works" className="mt-20 sm:mt-32 pt-12 sm:pt-16 border-t border-black/15">
+          <div className="text-xs font-semibold tracking-wider text-gray-600 uppercase mb-3 sm:mb-4 text-center sm:text-left">
             How It Works
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif mb-8 sm:mb-12 text-center sm:text-left">
@@ -266,28 +245,52 @@ export default function Home() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-black/5 space-y-3 sm:space-y-4">
-              <span className="text-2xl sm:text-3xl font-serif text-[#2d5235]">01</span>
-              <h3 className="text-lg sm:text-xl font-medium">Download the APK</h3>
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                Click the download button to fetch the latest APK build directly.
-              </p>
+            {/* Card 01 */}
+            <div className="group relative bg-white p-6 sm:p-8 rounded-3xl border border-black/10 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-[#2d5235]/40 flex flex-col justify-between overflow-hidden">
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#2d5235]/5 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:bg-[#2d5235]/10 pointer-events-none" />
+              <div className="space-y-3 sm:space-y-4 relative z-10">
+                <span className="inline-block text-2xl sm:text-3xl font-serif text-[#2d5235] bg-[#2d5235]/10 px-3 py-1 rounded-2xl transition-transform duration-300 group-hover:scale-105 border border-[#2d5235]/20">
+                  01
+                </span>
+                <h3 className="text-lg sm:text-xl font-medium group-hover:text-[#2d5235] transition-colors">
+                  Download the APK
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                  Click the download button to fetch the latest APK build directly.
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-black/5 space-y-3 sm:space-y-4">
-              <span className="text-2xl sm:text-3xl font-serif text-[#2d5235]">02</span>
-              <h3 className="text-lg sm:text-xl font-medium">Allow Installation</h3>
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                Enable installation from unknown sources in your browser or file manager settings.
-              </p>
+            {/* Card 02 */}
+            <div className="group relative bg-white p-6 sm:p-8 rounded-3xl border border-black/10 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-[#2d5235]/40 flex flex-col justify-between overflow-hidden">
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#2d5235]/5 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:bg-[#2d5235]/10 pointer-events-none" />
+              <div className="space-y-3 sm:space-y-4 relative z-10">
+                <span className="inline-block text-2xl sm:text-3xl font-serif text-[#2d5235] bg-[#2d5235]/10 px-3 py-1 rounded-2xl transition-transform duration-300 group-hover:scale-105 border border-[#2d5235]/20">
+                  02
+                </span>
+                <h3 className="text-lg sm:text-xl font-medium group-hover:text-[#2d5235] transition-colors">
+                  Allow Installation
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                  Enable installation from unknown sources in your browser or file manager settings.
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-black/5 space-y-3 sm:space-y-4">
-              <span className="text-2xl sm:text-3xl font-serif text-[#2d5235]">03</span>
-              <h3 className="text-lg sm:text-xl font-medium">Get Notified</h3>
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                Enter your email above to receive an instant update when we go live on Google Play.
-              </p>
+            {/* Card 03 */}
+            <div className="group relative bg-white p-6 sm:p-8 rounded-3xl border border-black/10 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-[#2d5235]/40 flex flex-col justify-between overflow-hidden">
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#2d5235]/5 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:bg-[#2d5235]/10 pointer-events-none" />
+              <div className="space-y-3 sm:space-y-4 relative z-10">
+                <span className="inline-block text-2xl sm:text-3xl font-serif text-[#2d5235] bg-[#2d5235]/10 px-3 py-1 rounded-2xl transition-transform duration-300 group-hover:scale-105 border border-[#2d5235]/20">
+                  03
+                </span>
+                <h3 className="text-lg sm:text-xl font-medium group-hover:text-[#2d5235] transition-colors">
+                  Get Notified
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                  Enter your email above to receive an instant update when we go live on Google Play.
+                </p>
+              </div>
             </div>
           </div>
         </section>
