@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Qurious Mind Infotainment Pvt Ltd",
-  description: "Experience the future of mobile learning with Qurio Learn.",
+  title: "Qurio-Learn",
+  description: "Experience the future of Robotics with Qurio Learn.",
   icons: {
     icon: "/logo.png",
   },
