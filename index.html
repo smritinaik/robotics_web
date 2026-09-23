@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qurio Learn</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          screens: {
+            'xs': '475px',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Selection styles */
+    ::selection {
+      background-color: #2d5235;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#eae6df] text-[#1c1c1c] font-sans selection:bg-[#2d5235] selection:text-white">
+
+  <!-- Navigation Bar -->
+  <header class="fixed top-3 sm:top-6 left-0 right-0 z-50 flex justify-center px-2 sm:px-4">
+    <nav class="flex items-center justify-between w-full max-w-4xl px-3 sm:px-6 py-2 sm:py-3 bg-white/90 backdrop-blur-md rounded-full shadow-md border border-black/10 gap-2">
+      
+      <!-- Logo Brand Section -->
+      <div class="flex items-center gap-1.5 sm:gap-2 font-semibold text-[11px] xs:text-xs sm:text-base tracking-tight flex-shrink-0">
+        <div class="relative w-6 h-6 sm:w-9 sm:h-9 overflow-hidden rounded-full flex-shrink-0 border border-black/10">
+          <img src="/logo.png" alt="Qurio Learn Logo" class="w-full h-full object-cover">
+        </div>
+        <span class="inline lowercase font-medium">Qurio Learn</span>
+      </div>
+
+      <!-- Segmented Navigation Tab Pill -->
+      <div class="flex items-center bg-[#dedad3] p-1 rounded-full text-xs sm:text-sm font-medium">
+        <button
+          id="tab-home"
+          onclick="scrollToSection('top', 'home')"
+          class="px-3 sm:px-5 py-1.5 sm:py-2 rounded-full transition-all duration-200 whitespace-nowrap bg-[#2d5235] text-white shadow-sm"
+        >
+          Home
+        </button>
+        <button
+          id="tab-how-it-works"
+          onclick="scrollToSection('how-it-works', 'how-it-works')"
+          class="px-3 sm:px-5 py-1.5 sm:py-2 rounded-full transition-all duration-200 whitespace-nowrap text-gray-700 hover:text-black"
+        >
+          How it works
+        </button>
+      </div>
+
+      <!-- Download Button -->
+      <a
+        href="https://drive.google.com/uc?export=download&id=1XdctwDDxOz1HKmlsXw6r9P9TYLGZLIyt"
+        target="_blank"
+        rel="noopener noreferrer"
+        download
+        class="flex items-center gap-1.5 sm:gap-2 bg-[#1c1c1c] text-white px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium hover:bg-black transition-all shadow-sm flex-shrink-0"
+      >
+        <i data-lucide="download" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+        <span>Get APK</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="pt-28 sm:pt-36 pb-16 sm:pb-20 px-4 sm:px-6 max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      
+      <!-- Left Column Text & Form -->
+      <div class="lg:col-span-7 space-y-6 sm:space-y-8 text-center lg:text-left">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-serif tracking-tight leading-[1.15] text-balance">
+          Experience the future of
+          <span class="relative inline-block text-[#2d5235] bg-[#2d5235]/10 px-3 py-0.5 rounded-2xl border-b-2 border-[#2d5235]/40 shadow-sm">
+            Robotics.
+          </span>
+        </h1>
+        <p class="text-base sm:text-lg text-gray-700 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+          Download the APK directly to try our early release, or leave your email to get notified once live on Google Play.
+        </p>
+
+        <!-- Waitlist Form Card -->
+        <div class="bg-white/80 backdrop-blur-sm p-5 sm:p-6 rounded-3xl max-w-md mx-auto lg:mx-0 shadow-md border border-black/10 text-left">
+          <p class="text-xs sm:text-sm font-medium text-gray-800 mb-3">
+            Get priority access the moment we launch on Play Store.
+          </p>
+          <form id="waitlist-form" onsubmit="handleSubscribe(event)" class="space-y-3">
+            <input
+              type="email"
+              id="email-input"
+              placeholder="Enter your email"
+              required
+              class="w-full px-4 py-3 rounded-2xl bg-[#f7f5f0] border border-black/10 focus:border-[#2d5235] focus:bg-white outline-none text-sm transition-all"
+            />
+            <button
+              type="submit"
+              id="submit-btn"
+              class="w-full bg-[#2d5235] text-white py-3 rounded-2xl text-sm font-medium hover:bg-[#23422a] transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
+            >
+              <span id="btn-text">Join 100+ early users</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </form>
+
+          <p id="form-message" class="mt-3 text-xs font-medium hidden"></p>
+        </div>
+
+        <!-- Direct Download Action -->
+        <div id="download-section" class="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4">
+          <a
+            href="https://drive.google.com/uc?export=download&id=1XdctwDDxOz1HKmlsXw6r9P9TYLGZLIyt"
+            target="_blank"
+            rel="noopener noreferrer"
+            download
+            class="w-full sm:w-auto flex items-center justify-center gap-3 bg-[#2d5235] text-white px-6 py-3.5 rounded-full font-medium hover:bg-[#23422a] shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5"
+          >
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span>Download APK Directly</span>
+          </a>
+          <span class="text-xs text-gray-600 font-medium">v1.0.0 • Android Direct APK</span>
+        </div>
+      </div>
+
+      <!-- Clean Phone Mockup with Screenshots Carousel -->
+      <div class="lg:col-span-5 flex justify-center mt-6 lg:mt-0">
+        <div class="relative w-[280px] sm:w-[320px] h-[570px] sm:h-[650px] bg-[#1a1a1b] rounded-[48px] sm:rounded-[54px] p-2.5 sm:p-3 shadow-2xl border-[4px] border-[#2c2c2e]">
+          
+          <!-- Integrated Side Buttons -->
+          <div class="absolute -left-[7px] top-24 w-[3px] h-8 bg-[#3a3a3c] rounded-l-sm"></div>
+          <div class="absolute -left-[7px] top-36 w-[3px] h-12 bg-[#3a3a3c] rounded-l-sm"></div>
+          <div class="absolute -right-[7px] top-28 w-[3px] h-14 bg-[#3a3a3c] rounded-r-sm"></div>
+
+          <!-- Inner Display Screen Area -->
+          <div class="relative w-full h-full bg-black rounded-[38px] sm:rounded-[44px] overflow-hidden">
+            
+            <!-- Front Camera Pill Bar -->
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 w-24 sm:w-28 h-4 sm:h-5 bg-black rounded-full z-30 shadow-md"></div>
+
+            <!-- Screenshots Slides -->
+            <div id="screenshot-container">
+              <img src="/1.jpg" alt="App Screenshot 1" class="screenshot-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-100 z-10" />
+              <img src="/2.jpg" alt="App Screenshot 2" class="screenshot-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 z-0" />
+              <img src="/3.jpg" alt="App Screenshot 3" class="screenshot-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 z-0" />
+              <img src="/4.jpg" alt="App Screenshot 4" class="screenshot-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 z-0" />
+              <img src="/5.jpg" alt="App Screenshot 5" class="screenshot-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 z-0" />
+              <img src="/6.jpg" alt="App Screenshot 6" class="screenshot-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 z-0" />
+              <img src="/7.jpg" alt="App Screenshot 7" class="screenshot-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 z-0" />
+            </div>
+
+            <!-- Bottom Slide Indicators -->
+            <div id="indicators-container" class="absolute bottom-5 left-0 right-0 z-20 flex justify-center gap-1.5">
+              <span class="indicator-dot h-1.5 rounded-full transition-all duration-300 w-5 bg-white shadow-sm"></span>
+              <span class="indicator-dot h-1.5 rounded-full transition-all duration-300 w-1.5 bg-white/40"></span>
+              <span class="indicator-dot h-1.5 rounded-full transition-all duration-300 w-1.5 bg-white/40"></span>
+              <span class="indicator-dot h-1.5 rounded-full transition-all duration-300 w-1.5 bg-white/40"></span>
+              <span class="indicator-dot h-1.5 rounded-full transition-all duration-300 w-1.5 bg-white/40"></span>
+              <span class="indicator-dot h-1.5 rounded-full transition-all duration-300 w-1.5 bg-white/40"></span>
+              <span class="indicator-dot h-1.5 rounded-full transition-all duration-300 w-1.5 bg-white/40"></span>
+            </div>
+
+            <!-- Bottom Home Bar -->
+            <div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-28 h-1 bg-white/60 rounded-full z-20"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="mt-20 sm:mt-32 pt-12 sm:pt-16 border-t border-black/15">
+      <div class="text-xs font-semibold tracking-wider text-gray-600 uppercase mb-3 sm:mb-4 text-center sm:text-left">
+        How It Works
+      </div>
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-serif mb-8 sm:mb-12 text-center sm:text-left">
+        Getting started is simple.
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <!-- Card 01 -->
+        <div class="group relative bg-white p-6 sm:p-8 rounded-3xl border border-black/10 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-[#2d5235]/40 flex flex-col justify-between overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-24 h-24 bg-[#2d5235]/5 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:bg-[#2d5235]/10 pointer-events-none"></div>
+          <div class="space-y-3 sm:space-y-4 relative z-10">
+            <span class="inline-block text-2xl sm:text-3xl font-serif text-[#2d5235] bg-[#2d5235]/10 px-3 py-1 rounded-2xl transition-transform duration-300 group-hover:scale-105 border border-[#2d5235]/20">
+              01
+            </span>
+            <h3 class="text-lg sm:text-xl font-medium group-hover:text-[#2d5235] transition-colors">
+              Download the APK
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+              Click the download button to fetch the latest APK build directly.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 02 -->
+        <div class="group relative bg-white p-6 sm:p-8 rounded-3xl border border-black/10 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-[#2d5235]/40 flex flex-col justify-between overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-24 h-24 bg-[#2d5235]/5 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:bg-[#2d5235]/10 pointer-events-none"></div>
+          <div class="space-y-3 sm:space-y-4 relative z-10">
+            <span class="inline-block text-2xl sm:text-3xl font-serif text-[#2d5235] bg-[#2d5235]/10 px-3 py-1 rounded-2xl transition-transform duration-300 group-hover:scale-105 border border-[#2d5235]/20">
+              02
+            </span>
+            <h3 class="text-lg sm:text-xl font-medium group-hover:text-[#2d5235] transition-colors">
+              Allow Installation
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+              Enable installation from unknown sources in your browser or file manager settings.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 03 -->
+        <div class="group relative bg-white p-6 sm:p-8 rounded-3xl border border-black/10 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-[#2d5235]/40 flex flex-col justify-between overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-24 h-24 bg-[#2d5235]/5 rounded-full transition-all duration-300 group-hover:scale-150 group-hover:bg-[#2d5235]/10 pointer-events-none"></div>
+          <div class="space-y-3 sm:space-y-4 relative z-10">
+            <span class="inline-block text-2xl sm:text-3xl font-serif text-[#2d5235] bg-[#2d5235]/10 px-3 py-1 rounded-2xl transition-transform duration-300 group-hover:scale-105 border border-[#2d5235]/20">
+              03
+            </span>
+            <h3 class="text-lg sm:text-xl font-medium group-hover:text-[#2d5235] transition-colors">
+              Get Notified
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+              Enter your email above to receive an instant update when we go live on Google Play.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Screenshot Carousel Logic
+    let currentImageIndex = 0;
+    const images = document.querySelectorAll('.screenshot-img');
+    const dots = document.querySelectorAll('.indicator-dot');
+
+    setInterval(() => {
+      images[currentImageIndex].classList.remove('opacity-100', 'z-10');
+      images[currentImageIndex].classList.add('opacity-0', 'z-0');
+      
+      dots[currentImageIndex].classList.remove('w-5', 'bg-white', 'shadow-sm');
+      dots[currentImageIndex].classList.add('w-1.5', 'bg-white/40');
+
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+
+      images[currentImageIndex].classList.remove('opacity-0', 'z-0');
+      images[currentImageIndex].classList.add('opacity-100', 'z-10');
+      
+      dots[currentImageIndex].classList.remove('w-1.5', 'bg-white/40');
+      dots[currentImageIndex].classList.add('w-5', 'bg-white', 'shadow-sm');
+    }, 2000);
+
+    // Smooth Navigation & Tab Switcher
+    function scrollToSection(id, tab) {
+      const homeTab = document.getElementById('tab-home');
+      const howTab = document.getElementById('tab-how-it-works');
+
+      if (tab === 'home') {
+        homeTab.className = 'px-3 sm:px-5 py-1.5 sm:py-2 rounded-full transition-all duration-200 whitespace-nowrap bg-[#2d5235] text-white shadow-sm';
+        howTab.className = 'px-3 sm:px-5 py-1.5 sm:py-2 rounded-full transition-all duration-200 whitespace-nowrap text-gray-700 hover:text-black';
+      } else {
+        howTab.className = 'px-3 sm:px-5 py-1.5 sm:py-2 rounded-full transition-all duration-200 whitespace-nowrap bg-[#2d5235] text-white shadow-sm';
+        homeTab.className = 'px-3 sm:px-5 py-1.5 sm:py-2 rounded-full transition-all duration-200 whitespace-nowrap text-gray-700 hover:text-black';
+      }
+
+      if (id === 'top') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Waitlist Form Submission Logic - Local Storage
+    function handleSubscribe(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('email-input');
+      const email = emailInput.value.trim();
+
+      if (!email) return;
+
+      // Fetch existing list or initialize empty array
+      const existingWaitlist = JSON.parse(localStorage.getItem('waitlist') || '[]');
+
+      if (existingWaitlist.includes(email)) {
+        showMessage("You're already on the list!", 'success');
+      } else {
+        existingWaitlist.push(email);
+        localStorage.setItem('waitlist', JSON.stringify(existingWaitlist));
+        showMessage('Success! We will notify you when we launch on Play Store.', 'success');
+        emailInput.value = '';
+      }
+    }
+
+    function showMessage(text, type) {
+      const formMessage = document.getElementById('form-message');
+      formMessage.textContent = text;
+      formMessage.className = `mt-3 text-xs font-medium ${type === 'success' ? 'text-green-700' : 'text-red-600'}`;
+      formMessage.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
